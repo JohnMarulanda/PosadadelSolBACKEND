@@ -1,10 +1,10 @@
 const { Pool } = require('pg');
 
-const pool = new Pool ({
+const pool = new Pool({
     host: 'localhost',
-    user: 'postgres',
-    password: 'G2DS1',
-    database: 'firstapi',
+    user: 'johnprueba',
+    password: 'password',
+    database: 'nodelogin',
     port: '5432'
 });
 
@@ -20,25 +20,54 @@ const getUsersById = async (req, res) => {
 
 };
 
+
 const createUsers = async (req, res) => {
-    const { firstName, lastName, email } = req.body
-    const response = await pool.query('INSERT INTO users (firstName, lastName, email) VALUES ($1, $2, $3)', [firstName, lastName, email])
+    const { nombres, apellidos, email, contrasena } = req.body
+    if (!nombres || !apellidos || !email || !contrasena) {
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+    const response = await pool.query('INSERT INTO users (nombres, apellidos, email, contrasena) VALUES ($1, $2, $3, $4)', [nombres, apellidos, email, contrasena])
     console.log(response);
     res.json({
         message: 'Usser Added Succesfully',
         body: {
-            user: {firstName, lastName, email}
+            user: { nombres, apellidos, email, contrasena }
         }
     })
 };
 
+const login = async (req, res) => {
+    const { email, contrasena } = req.body;
+
+    try {
+        // Realiza una consulta para verificar el email y la contraseña en la base de datos
+        const query = 'SELECT * FROM users WHERE email = $1 AND contrasena = $2';
+        const values = [email, contrasena];
+        const result = await pool.query(query, values);
+
+        // Verifica si se encontraron registros que coinciden con las credenciales
+        if (result.rows.length > 0) {
+            // Usuario autenticado correctamente
+            res.status(200).json({ message: 'Inicio de sesión exitoso' });
+        } else {
+            // Credenciales incorrectas
+            res.status(401).json({ message: 'Credenciales inválidas' });
+        }
+    } catch (error) {
+        // Error al realizar la consulta a la base de datos
+        console.error('Error en la consulta:', error);
+        res.status(500).json({ message: 'Error en el servidor' });
+    }
+};
+
 const updateUsers = async (req, res) => {
     const id = req.params.id;
-    const {firstName, lastName, email} = req.body;
-    const response = await pool.query('UPDATE users SET firstName = $1, lastName = $2, email = $3 WHERE id = $4', [
-        firstName,
-        lastName,
+    const { nombres, apellidos, email, contrasena } = req.body;
+    const response = await pool.query('UPDATE users SET nombres = $1, apellidos = $2, email = $3, contrasena = $4 WHERE id = $5', [
+        nombres,
+        apellidos,
         email,
+        contrasena,
         id
     ]);
     console.log(response);
@@ -50,7 +79,7 @@ const deleteUsers = async (req, res) => {
     const response = await pool.query('DELETE FROM users WHERE id = $1', [id]);
     console.log(response);
     res.json(`User ${id} deleted successfully`);
-    
+
 };
 
 
@@ -59,5 +88,6 @@ module.exports = {
     getUsersById,
     createUsers,
     updateUsers,
-    deleteUsers
+    deleteUsers,
+    login
 }
