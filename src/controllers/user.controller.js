@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+// connectionString: "postgres://vgfbqjmq:nRcF650YYKV8UMtp_dwT_xVtN0dhxNwh@mahmud.db.elephantsql.com/vgfbqjmq"
 
 const pool = new Pool({
     host: 'localhost',
@@ -9,8 +10,13 @@ const pool = new Pool({
 });
 
 const getUsers = async (req, res) => {
-    const response = await pool.query('SELECT * FROM users');
-    res.status(200).json(response.rows);
+    try {
+        const response = await pool.query('SELECT * FROM users');
+        res.status(200).json(response.rows);
+    } catch (error) {
+        console.error('Error al obtener los usuarios', error);
+        res.status(500).json({ error: 'Error al obtener los usuarios' });
+    }
 };
 
 const getUsersById = async (req, res) => {
@@ -19,7 +25,6 @@ const getUsersById = async (req, res) => {
     res.json(response.rows);
 
 };
-
 
 const createUsers = async (req, res) => {
     const { nombres, apellidos, email, contrasena } = req.body
