@@ -1,11 +1,9 @@
+const express = require('express');
+const app = express();
 const { Pool } = require('pg');
 
 const pool = new Pool({
-    host: 'localhost',
-    user: 'johnprueba',
-    password: 'password',
-    database: 'nodelogin',
-    port: '5432'
+  connectionString: "postgres://nztheprj:0cUVGbNh02RlQVmrW05nviiuMVTM6p7I@silly.db.elephantsql.com/nztheprj"
 });
 
 const getUsers = async (req, res) => {
