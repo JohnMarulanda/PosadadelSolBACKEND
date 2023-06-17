@@ -1,10 +1,12 @@
 const express = require('express');
 const app = express();
 const { Pool } = require('pg');
+const bcrypt = require('bcrypt');
+
 // connectionString: "postgres://vgfbqjmq:nRcF650YYKV8UMtp_dwT_xVtN0dhxNwh@mahmud.db.elephantsql.com/vgfbqjmq"
 
 const pool = new Pool({
-  connectionString: "postgres://nztheprj:0cUVGbNh02RlQVmrW05nviiuMVTM6p7I@silly.db.elephantsql.com/nztheprj"
+    connectionString: "postgres://nztheprj:0cUVGbNh02RlQVmrW05nviiuMVTM6p7I@silly.db.elephantsql.com/nztheprj"
 });
 
 const getUsers = async (req, res) => {
@@ -25,43 +27,59 @@ const getUsersById = async (req, res) => {
 };
 
 const createUsers = async (req, res) => {
-    const { nombres, apellidos, email, contrasena } = req.body
+    const { nombres, apellidos, email, contrasena } = req.body;
+
     if (!nombres || !apellidos || !email || !contrasena) {
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
-    const response = await pool.query('INSERT INTO users (nombres, apellidos, email, contrasena) VALUES ($1, $2, $3, $4)', [nombres, apellidos, email, contrasena])
-    console.log(response);
-    res.json({
-        message: 'Usser Added Succesfully',
-        body: {
-            user: { nombres, apellidos, email, contrasena }
-        }
-    })
+
+    try {
+        // Genera un hash de la contraseña utilizando bcrypt
+        const hashedPassword = await bcrypt.hash(contrasena, 10); // El segundo argumento es el "salt" (factor de trabajo)
+
+        const response = await pool.query('INSERT INTO users (nombres, apellidos, email, contrasena) VALUES ($1, $2, $3, $4)', [nombres, apellidos, email, hashedPassword]);
+        console.log(response);
+        res.json({
+            message: 'Usuario agregado exitosamente',
+            body: {
+                user: { nombres, apellidos, email }
+            }
+        });
+    } catch (error) {
+        console.error('Error al crear el usuario:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
 };
+
 
 const login = async (req, res) => {
     const { email, contrasena } = req.body;
 
     try {
-        // Realiza una consulta para verificar el email y la contraseña en la base de datos
-        const query = 'SELECT * FROM users WHERE email = $1 AND contrasena = $2';
-        const values = [email, contrasena];
+        const query = 'SELECT * FROM users WHERE email = $1';
+        const values = [email];
         const result = await pool.query(query, values);
 
-        // Verifica si se encontraron registros que coinciden con las credenciales
         if (result.rows.length > 0) {
-            // Usuario autenticado correctamente
-            res.status(200).json({ message: 'Inicio de sesión exitoso' });
+            const user = result.rows[0];
+
+            // Verifica la contraseña cifrada utilizando bcrypt
+            const isPasswordValid = await bcrypt.compare(contrasena, user.contrasena);
+
+            if (isPasswordValid) {
+                res.status(200).json({ message: 'Inicio de sesión exitoso' });
+            } else {
+                res.status(401).json({ message: 'Credenciales inválidas' });
+            }
         } else {
-            // Credenciales incorrectas
             res.status(401).json({ message: 'Credenciales inválidas' });
         }
     } catch (error) {
-        // Error al realizar la consulta a la base de datos
         console.error('Error en la consulta:', error);
         res.status(500).json({ message: 'Error en el servidor' });
     }
 };
+
 
 const updateUsers = async (req, res) => {
     const id = req.params.id;
