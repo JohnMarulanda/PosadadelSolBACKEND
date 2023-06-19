@@ -27,12 +27,16 @@ const {
     deleteServByTipo
 } = require('../controllers/serv.controller');
 
+
+const {
+    contactoUser,
+    getMensajesPorTipo,
+    getMensajes
+} = require('../controllers/contac.controller');
+
 //Metods HTTP
 
-
-
-
-//Rutas para los servicios:  user.controller
+//Rutas para los usuarios:  user.controller
 // Ruta para obtener todos los usuarios http://localhost:4000/users
 router.get('/users', getUsers);
 
@@ -106,6 +110,18 @@ router.post('/servicios', createServ);
 
 // Ruta para eliminar un servicio por tipo
 router.delete('/servicios/:tipo_serv', deleteServByTipo);
+
+
+//Rutas para el mensaje de contactanos:  user.controller
+// Ruta para poster el mensaje http://localhost:4000/contacto
+router.post('/contacto', contactoUser);
+
+// Ruta para obtener el mensaje por tipo http://localhost:4000/mensajes/:tipo
+router.get('/mensajes/:tipo', getMensajesPorTipo);
+
+router.get('/mensajes', getMensajes);
+
+
 
 
 module.exports = router;

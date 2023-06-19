@@ -73,3 +73,19 @@ VALUES
     ('lavandería', 'Servicio de lavandería con lavado, secado y planchado de prendas', 60000),
     ('cuarto', 'Servicio de acondicionamiento, comida al cuarto y limpieza del cuarto durante la estadía', 50000);
 
+
+
+    CREATE TABLE contacto (
+    id SERIAL PRIMARY KEY,
+    nombres VARCHAR(50) NOT NULL,
+    apellidos VARCHAR(50) NOT NULL,
+    correo_electronico VARCHAR(100) NOT NULL,
+    numero_telefono VARCHAR(20) NOT NULL,
+    tipo VARCHAR(50) NOT NULL,
+    mensaje TEXT NOT NULL
+);
+
+INSERT INTO contacto (nombres, apellidos, correo_electronico, numero_telefono, tipo, mensaje)
+VALUES ('Juan', 'Pérez', 'juan@example.com', '123456789', 'sugerencias', 'Hola, tengo una sugerencia para mejorar el hotel.');
+
+
