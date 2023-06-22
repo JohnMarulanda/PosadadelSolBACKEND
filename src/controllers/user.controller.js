@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
 
 // connectionString: "postgres://vgfbqjmq:nRcF650YYKV8UMtp_dwT_xVtN0dhxNwh@mahmud.db.elephantsql.com/vgfbqjmq"
 
@@ -51,7 +53,6 @@ const createUsers = async (req, res) => {
     }
 };
 
-
 const login = async (req, res) => {
     const { email, contrasena } = req.body;
 
@@ -67,7 +68,10 @@ const login = async (req, res) => {
             const isPasswordValid = await bcrypt.compare(contrasena, user.contrasena);
 
             if (isPasswordValid) {
-                res.status(200).json({ message: 'Inicio de sesión exitoso' });
+                // Genera el token con el ID de usuario
+                const token = jwt.sign({ userId: user.id }, 'secretKey', { expiresIn: '1h' });
+
+                res.status(200).json({ token }); // Envía el token al cliente
             } else {
                 res.status(401).json({ message: 'Credenciales inválidas' });
             }
@@ -79,6 +83,7 @@ const login = async (req, res) => {
         res.status(500).json({ message: 'Error en el servidor' });
     }
 };
+
 
 
 const updateUsers = async (req, res) => {
