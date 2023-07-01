@@ -81,43 +81,43 @@ router.delete('/users/:id', deleteUsers);
 
 
 // Rutas para los controladores de habitaciones
-app.get('/rooms', getRooms);
-app.post('/rooms', createRoom);
-app.get('/rooms/:habitacionId', getRoomByID);
-app.put('/rooms/:habitacionId', updateRoom);
-app.delete('/rooms/:habitacionId', deleteRoom);
-app.get('/rooms/type/:tipo', getRoomByType);
+router.get('/rooms', getRooms);
+router.post('/rooms', createRoom);
+router.get('/rooms/:habitacionId', getRoomByID);
+router.put('/rooms/:habitacionId', updateRoom);
+router.delete('/rooms/:habitacionId', deleteRoom);
+router.get('/rooms/type/:tipo', getRoomByType);
 
 
 // Rutas para los controladores de gerentes
-app.get('/managers', getManagers);
-app.post('/managers', createManager);
-app.get('/managers/:dni', getManagerByDNI);
-app.put('/managers/:dni', updateManager);
-app.delete('/managers/:dni', deleteManager);
+router.get('/managers', getManagers);
+router.post('/managers', createManager);
+router.get('/managers/:dni', getManagerByDNI);
+router.put('/managers/:dni', updateManager);
+router.delete('/managers/:dni', deleteManager);
 
 // Rutas para los controladores de empleados
-app.get('/employees', getEmployees);
-app.post('/employees', createEmployee);
-app.get('/employees/:dni', getEmployeeByDNI);
-app.put('/employees/:dni', updateEmployee);
-app.delete('/employees/:dni', deleteEmployee);
+router.get('/employees', getEmployees);
+router.post('/employees', createEmployee);
+router.get('/employees/:dni', getEmployeeByDNI);
+router.put('/employees/:dni', updateEmployee);
+router.delete('/employees/:dni', deleteEmployee);
 
 // Rutas para los controladores de servicios
-app.get('/services', getServices);
-app.post('/services', createService);
-app.get('/services/:servicioId', getServiceByID);
-app.get('/services/type/:tipo', getServiceByType);
-app.put('/services/:servicioId', updateService);
-app.delete('/services/:servicioId', deleteService);
+router.get('/services', getServices);
+router.post('/services', createService);
+router.get('/services/:servicioId', getServiceByID);
+router.get('/services/type/:tipo', getServiceByType);
+router.put('/services/:servicioId', updateService);
+router.delete('/services/:servicioId', deleteService);
 
 
 // Rutas para los controladores de planes
-app.get('/plans', getPlans);
-app.post('/plans', createPlan);
-app.get('/plans/:planId', getPlanByID);
-app.put('/plans/:planId', updatePlan);
-app.delete('/plans/:planId', deletePlan);
+router.get('/plans', getPlans);
+router.post('/plans', createPlan);
+router.get('/plans/:planId', getPlanByID);
+router.put('/plans/:planId', updatePlan);
+router.delete('/plans/:planId', deletePlan);
 
 
 //Rutas para el mensaje de contactanos:
