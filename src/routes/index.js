@@ -5,7 +5,8 @@ const { getUsers,
     createUsers,
     updateUsers,
     deleteUsers,
-    login } = require('../controllers/user.controller');
+    login, 
+    getUsersByemail} = require('../controllers/user.controller');
 
 const {
     getHab,
@@ -42,6 +43,9 @@ router.get('/users', getUsers);
 
 // Ruta para obtener un usuario por ID http://localhost:4000/users/:id
 router.get('/users/:id', getUsersById);
+
+// Ruta para obtener un usuario por ID http://localhost:4000/users/email/:email
+router.get('/users/email/:email', getUsersByemail);
 
 // Ruta para crear un nuevo usuario http://localhost:4000/users/
 router.post('/users', createUsers);

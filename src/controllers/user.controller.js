@@ -28,6 +28,13 @@ const getUsersById = async (req, res) => {
 
 };
 
+const getUsersByemail = async (req, res) => {
+    const email = req.params.email;
+    const response = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    res.json(response.rows);
+
+};
+
 const createUsers = async (req, res) => {
     const { nombres, apellidos, email, contrasena } = req.body;
 
@@ -86,19 +93,63 @@ const login = async (req, res) => {
 
 
 
-const updateUsers = async (req, res) => {
+/*const updateUsers = async (req, res) => {
     const id = req.params.id;
     const { nombres, apellidos, email, contrasena } = req.body;
+
+    const hashedPassword = await bcrypt.hash(contrasena, 10); // El segundo argumento es el "salt" (factor de trabajo
+
     const response = await pool.query('UPDATE users SET nombres = $1, apellidos = $2, email = $3, contrasena = $4 WHERE id = $5', [
         nombres,
         apellidos,
         email,
-        contrasena,
+        hashedPassword,
         id
     ]);
     console.log(response);
     res.json('User Updated Successfully');
-};
+};*/
+
+const updateUsers = async (req, res) => {
+    const id = req.params.id;
+    const { nombres, apellidos, email, contrasena } = req.body;
+  
+    // Verificar si se proporciona al menos un campo para actualizar
+    if (!nombres && !apellidos && !email && !contrasena) {
+      return res.json('No fields provided for update');
+    }
+  
+    const updateFields = {}; // Objeto para almacenar los campos a actualizar
+  
+    if (nombres) updateFields.nombres = nombres;
+    if (apellidos) updateFields.apellidos = apellidos;
+    if (email) updateFields.email = email;
+  
+    if (contrasena) {
+      const hashedPassword = await bcrypt.hash(contrasena, 10);
+      updateFields.contrasena = hashedPassword;
+    }
+  
+    const updateQueryValues = Object.values(updateFields);
+    updateQueryValues.push(id);
+  
+    const updateQuery = {
+      text: generateUpdateQueryText(updateFields),
+      values: updateQueryValues
+    };
+  
+    const response = await pool.query(updateQuery);
+  
+    console.log(response);
+    res.json('User Updated Successfully');
+  };
+  
+  // Función auxiliar para generar el texto de la consulta de actualización
+  function generateUpdateQueryText(fields) {
+    const setClause = Object.keys(fields).map((key, index) => `${key} = $${index + 1}`).join(', ');
+    return `UPDATE users SET ${setClause} WHERE id = $${Object.keys(fields).length + 1}`;
+  }
+  
 
 const deleteUsers = async (req, res) => {
     const id = req.params.id;
@@ -112,6 +163,7 @@ const deleteUsers = async (req, res) => {
 module.exports = {
     getUsers,
     getUsersById,
+    getUsersByemail,
     createUsers,
     updateUsers,
     deleteUsers,
