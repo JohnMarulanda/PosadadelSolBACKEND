@@ -9,23 +9,20 @@ const { getUsers,
     getUsersByemail} = require('../controllers/user.controller');
 
 const {
-    getHab,
-    getHabByType,
-    getAvailableHabByType,
-    getHabDescription,
-    getHabPrice,
-    updateHabByTipoHab,
-    createHab,
-    deleteHabByTipoHab } = require('../controllers/hab.controller');
+    getRooms,
+    createRoom,
+    getRoomByID,
+    updateRoom,
+    deleteRoom,
+    getRoomByType } = require('../controllers/hab.controller');
 
 const {
-    getServ,
-    getServByType,
-    getServDescription,
-    getServPrice,
-    updateSerByTipoServ,
-    createServ,
-    deleteServByTipo
+    getServices,
+    createService,
+    getServiceByID,
+    updateService,
+    deleteService,
+    getServiceByType
 } = require('../controllers/serv.controller');
 
 
@@ -34,6 +31,31 @@ const {
     getMensajesPorTipo,
     getMensajes
 } = require('../controllers/contac.controller');
+
+const {
+    getEmployees,
+    createEmployee,
+    getEmployeeByDNI,
+    updateEmployee,
+    deleteEmployee
+} = require('../controllers/workers.controller')
+
+const {
+    getPlans,
+    createPlan,
+    getPlanByID,
+    updatePlan,
+    deletePlan
+} = require('../controllers/plans.controller')
+
+const {
+    getManagers,
+    createManager,
+    getManagerByDNI,
+    updateManager,
+    deleteManager
+} = require('../controllers/admin.controller')
+
 
 //Metods HTTP
 
@@ -62,67 +84,49 @@ router.delete('/users/:id', deleteUsers);
 
 
 
-//Rutas para las habitaciones:  hab.controller
-
-// Ruta para obtener todas las habitaciones
-router.get('/habitaciones', getHab);
-
-// Ruta para obtener habitaciones por tipoHab
-router.get('/habitaciones/:tipoHab', getHabByType);
-
-// Ruta para obtener habitaciones disponibles por tipoHab
-router.get('/habitaciones/disponibles/:tipoHab', getAvailableHabByType);
-
-// Ruta para obtener la descripción de una habitación por tipo de habitación
-router.get('/habitaciones/descripcion/tipo/:tipo_hab', getHabDescription);
-
-// Ruta para obtener el precio de una habitación por tipo de habitación
-router.get('/habitaciones/precio/tipo/:tipo_hab', getHabPrice);
-
-// Ruta para eliminar la habitación por tipo de habitación
-router.delete('/habitaciones/:tipo_hab', deleteHabByTipoHab);
+// Rutas para los controladores de habitaciones
+router.get('/rooms', getRooms);
+router.post('/rooms', createRoom);
+router.get('/rooms/:habitacionId', getRoomByID);
+router.put('/rooms/:habitacionId', updateRoom);
+router.delete('/rooms/:habitacionId', deleteRoom);
+router.get('/rooms/type/:tipo', getRoomByType);
 
 
-// Ruta para actualizar la habitación por tipo de habitación
-router.put('/habitaciones/:tipo_hab', updateHabByTipoHab);
+// Rutas para los controladores de gerentes
+router.get('/managers', getManagers);
+router.post('/managers', createManager);
+router.get('/managers/:dni', getManagerByDNI);
+router.put('/managers/:dni', updateManager);
+router.delete('/managers/:dni', deleteManager);
 
-// Ruta para crear una nueva habitación
-router.post('/habitaciones', createHab);
+// Rutas para los controladores de empleados
+router.get('/employees', getEmployees);
+router.post('/employees', createEmployee);
+router.get('/employees/:dni', getEmployeeByDNI);
+router.put('/employees/:dni', updateEmployee);
+router.delete('/employees/:dni', deleteEmployee);
 
-
-
-
-
-//Rutas para los servicios:  serv.controller
-// Ruta para obtener todos los servicios
-router.get('/servicios', getServ);
-
-// Ruta para obtener servicios por tipoServ
-router.get('/servicios/:tipoServ', getServByType);
-
-// Ruta para obtener la descripción de un servicio por tipo de servicio
-router.get('/servicios/descripcion/tipo/:tipo_serv', getServDescription);
-
-// Ruta para obtener el precio de un servicio por tipo de servicio
-router.get('/servicios/precio/tipo/:tipo_serv', getServPrice);
-
-// Ruta para actualizar un servicio por tipo
-router.put('/servicios/:tipo_serv', updateSerByTipoServ);
-
-// Ruta para crear un nuevo servicio
-router.post('/servicios', createServ);
-
-// Ruta para eliminar un servicio por tipo
-router.delete('/servicios/:tipo_serv', deleteServByTipo);
+// Rutas para los controladores de servicios
+router.get('/services', getServices);
+router.post('/services', createService);
+router.get('/services/:servicioId', getServiceByID);
+router.get('/services/type/:tipo', getServiceByType);
+router.put('/services/:servicioId', updateService);
+router.delete('/services/:servicioId', deleteService);
 
 
-//Rutas para el mensaje de contactanos:  user.controller
-// Ruta para poster el mensaje http://localhost:4000/contacto
+// Rutas para los controladores de planes
+router.get('/plans', getPlans);
+router.post('/plans', createPlan);
+router.get('/plans/:planId', getPlanByID);
+router.put('/plans/:planId', updatePlan);
+router.delete('/plans/:planId', deletePlan);
+
+
+//Rutas para el mensaje de contactanos:
 router.post('/contacto', contactoUser);
-
-// Ruta para obtener el mensaje por tipo http://localhost:4000/mensajes/:tipo
 router.get('/mensajes/:tipo', getMensajesPorTipo);
-
 router.get('/mensajes', getMensajes);
 
 
