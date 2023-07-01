@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 
 const pool = new Pool({
     connectionString: "postgres://nztheprj:0cUVGbNh02RlQVmrW05nviiuMVTM6p7I@silly.db.elephantsql.com/nztheprj"
-});
+  });
 
 const getUsers = async (req, res) => {
     try {
