@@ -5,8 +5,9 @@ const { getUsers,
     createUsers,
     updateUsers,
     deleteUsers,
-    login, 
-    getUsersByemail} = require('../controllers/user.controller');
+    login,
+    getUsersByemail,
+    countUsers } = require('../controllers/user.controller');
 
 const {
     getRooms,
@@ -15,8 +16,8 @@ const {
     updateRoom,
     deleteRoom,
     getRoomByType,
-    getBestRoom
- } = require('../controllers/hab.controller');
+    getBestRoom,
+    countRooms } = require('../controllers/hab.controller');
 
 const {
     getServices,
@@ -31,7 +32,8 @@ const {
 const {
     contactoUser,
     getMensajesPorTipo,
-    getMensajes
+    getMensajes,
+    countMensajes
 } = require('../controllers/contac.controller');
 
 const {
@@ -39,7 +41,8 @@ const {
     createEmployee,
     getEmployeeByDNI,
     updateEmployee,
-    deleteEmployee
+    deleteEmployee,
+    countEmployees
 } = require('../controllers/workers.controller')
 
 const {
@@ -95,6 +98,8 @@ router.put('/users/:id', updateUsers);
 // Ruta para eliminar un usuario por ID http://localhost:4000/users/:id
 router.delete('/users/:id', deleteUsers);
 
+router.get('/userscant', countUsers);
+
 
 
 
@@ -106,6 +111,7 @@ router.get('/rooms/:habitacionId', getRoomByID);
 router.put('/rooms/:habitacionId', updateRoom);
 router.delete('/rooms/:habitacionId', deleteRoom);
 router.get('/rooms/type/:tipo', getRoomByType);
+router.get('/roomscant', countRooms);
 
 
 
@@ -118,10 +124,12 @@ router.delete('/managers/:dni', deleteManager);
 
 // Rutas para los controladores de empleados
 router.get('/employees', getEmployees);
+router.get('/employeescant', countEmployees);
 router.post('/employees', createEmployee);
 router.get('/employees/:dni', getEmployeeByDNI);
 router.put('/employees/:dni', updateEmployee);
 router.delete('/employees/:dni', deleteEmployee);
+
 
 // Rutas para los controladores de servicios
 router.get('/services', getServices);
@@ -144,6 +152,7 @@ router.delete('/plans/:planId', deletePlan);
 router.post('/contacto', contactoUser);
 router.get('/mensajes/:tipo', getMensajesPorTipo);
 router.get('/mensajes', getMensajes);
+router.get('/mensajescant', countMensajes);
 
 //Rutas para controladores de reserva habitacion
 router.get('/reservaHab', getReservaHab);

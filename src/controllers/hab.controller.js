@@ -134,7 +134,17 @@ const getBestRoom = async (req, res) => {
         res.status(200).json(response.rows);
     } catch (error) {
         console.error('Error al obtener las habitaciones', error);
-        res.status(500).json({ error: 'Error al obtener las habitaciones' });
+        res.status(500).json({ error: 'Error al obtener las habitaciones' });}
+    }
+
+const countRooms = async (req, res) => {
+    try {
+        const response = await pool.query('SELECT COUNT(*) FROM habitacion');
+        const count = parseInt(response.rows[0].count);
+        res.status(200).json({ count });
+    } catch (error) {
+        console.error('Error al contar las habitaciones:', error);
+        res.status(500).json({ error: 'Error al contar las habitaciones' });
     }
 };
 
@@ -145,5 +155,7 @@ module.exports = {
     updateRoom,
     deleteRoom,
     getRoomByType,
-    getBestRoom
+    getBestRoom,
+    countRooms
 };
+

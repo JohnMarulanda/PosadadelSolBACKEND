@@ -85,11 +85,24 @@ const deleteEmployee = async (req, res) => {
     }
 };
 
+const countEmployees = async (req, res) => {
+    try {
+        const response = await pool.query('SELECT COUNT(*) FROM empleado');
+        const count = parseInt(response.rows[0].count);
+        res.status(200).json({ count });
+    } catch (error) {
+        console.error('Error al contar los empleados:', error);
+        res.status(500).json({ error: 'Error al contar los empleados' });
+    }
+};
+
 module.exports = {
     getEmployees,
     createEmployee,
     getEmployeeByDNI,
     updateEmployee,
-    deleteEmployee
+    deleteEmployee,
+    countEmployees
 };
+
 

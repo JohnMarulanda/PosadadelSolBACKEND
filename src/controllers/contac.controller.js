@@ -49,11 +49,22 @@ const getMensajes = async (req, res) => {
     }
 };
 
-
+const countMensajes = async (req, res) => {
+    try {
+        const response = await pool.query('SELECT COUNT(*) FROM contacto');
+        const count = parseInt(response.rows[0].count);
+        res.status(200).json({ count });
+    } catch (error) {
+        console.error('Error al contar los mensajes:', error);
+        res.status(500).json({ error: 'Error al contar los mensajes' });
+    }
+};
 
 module.exports = {
     contactoUser,
     getMensajesPorTipo,
-    getMensajes
-}
+    getMensajes,
+    countMensajes
+};
+
 

@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const pool = new Pool({
     connectionString: "postgres://nztheprj:0cUVGbNh02RlQVmrW05nviiuMVTM6p7I@silly.db.elephantsql.com/nztheprj"
-  });
+});
 
 const getUsers = async (req, res) => {
     try {
@@ -110,43 +110,43 @@ const login = async (req, res) => {
 const updateUsers = async (req, res) => {
     const id = req.params.id;
     const { nombres, apellidos, email, contrasena } = req.body;
-  
+
     // Verificar si se proporciona al menos un campo para actualizar
     if (!nombres && !apellidos && !email && !contrasena) {
-      return res.json('No fields provided for update');
+        return res.json('No fields provided for update');
     }
-  
+
     const updateFields = {}; // Objeto para almacenar los campos a actualizar
-  
+
     if (nombres) updateFields.nombres = nombres;
     if (apellidos) updateFields.apellidos = apellidos;
     if (email) updateFields.email = email;
-  
+
     if (contrasena) {
-      const hashedPassword = await bcrypt.hash(contrasena, 10);
-      updateFields.contrasena = hashedPassword;
+        const hashedPassword = await bcrypt.hash(contrasena, 10);
+        updateFields.contrasena = hashedPassword;
     }
-  
+
     const updateQueryValues = Object.values(updateFields);
     updateQueryValues.push(id);
-  
+
     const updateQuery = {
-      text: generateUpdateQueryText(updateFields),
-      values: updateQueryValues
+        text: generateUpdateQueryText(updateFields),
+        values: updateQueryValues
     };
-  
+
     const response = await pool.query(updateQuery);
-  
+
     console.log(response);
     res.json('User Updated Successfully');
-  };
-  
-  // Función auxiliar para generar el texto de la consulta de actualización
-  function generateUpdateQueryText(fields) {
+};
+
+// Función auxiliar para generar el texto de la consulta de actualización
+function generateUpdateQueryText(fields) {
     const setClause = Object.keys(fields).map((key, index) => `${key} = $${index + 1}`).join(', ');
     return `UPDATE users SET ${setClause} WHERE id = $${Object.keys(fields).length + 1}`;
-  }
-  
+}
+
 
 const deleteUsers = async (req, res) => {
     const id = req.params.id;
@@ -157,6 +157,17 @@ const deleteUsers = async (req, res) => {
 };
 
 
+const countUsers = async (req, res) => {
+    try {
+        const response = await pool.query('SELECT COUNT(*) FROM users');
+        const count = parseInt(response.rows[0].count);
+        res.status(200).json({ count });
+    } catch (error) {
+        console.error('Error al contar los usuarios:', error);
+        res.status(500).json({ error: 'Error al contar los usuarios' });
+    }
+};
+
 module.exports = {
     getUsers,
     getUsersById,
@@ -164,5 +175,6 @@ module.exports = {
     createUsers,
     updateUsers,
     deleteUsers,
-    login
-}
+    login,
+    countUsers
+};
