@@ -104,7 +104,39 @@ const deleteRoom = async (req, res) => {
         res.status(500).json({ error: 'Error al eliminar la habitación' });
     }
 };
+/*
+const getBestRoom = async (req, res) => {
+    const fecha = req.params.fecha;
+    const tipo = req.params.tipo;
 
+    try {
+        const response = await pool.query('SELECT * FROM habitacion where (tipo = $1 and fecha_dispo <= $2 and fecha_dispo = (select max(fecha_dispo) from habitacion))',
+         [tipo, fecha]
+         );
+
+        if (response.rows.length === 0) {
+            res.status(404).json({ error: 'Habitación no encontrada' });
+        } else {
+            res.status(200).json(response.rows[0]);
+        }
+    } catch (error) {
+        console.error('Error al obtener la habitación', error);
+        res.status(500).json({ error: 'Error al obtener la habitación' });
+    }
+};*/
+
+const getBestRoom = async (req, res) => {
+    const {tipo, fecha} = req.body;
+    try {
+        const response = await pool.query('SELECT habitacion_id FROM habitacion where tipo = $1 and fecha_dispo <= $2 and fecha_dispo = (select max(fecha_dispo) from habitacion)',
+        [tipo, fecha]
+        );
+        res.status(200).json(response.rows);
+    } catch (error) {
+        console.error('Error al obtener las habitaciones', error);
+        res.status(500).json({ error: 'Error al obtener las habitaciones' });
+    }
+};
 
 module.exports = {
     getRooms,
@@ -112,5 +144,6 @@ module.exports = {
     getRoomByID,
     updateRoom,
     deleteRoom,
-    getRoomByType
+    getRoomByType,
+    getBestRoom
 };

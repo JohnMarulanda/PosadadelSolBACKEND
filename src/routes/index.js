@@ -14,7 +14,9 @@ const {
     getRoomByID,
     updateRoom,
     deleteRoom,
-    getRoomByType } = require('../controllers/hab.controller');
+    getRoomByType,
+    getBestRoom
+ } = require('../controllers/hab.controller');
 
 const {
     getServices,
@@ -56,6 +58,18 @@ const {
     deleteManager
 } = require('../controllers/admin.controller')
 
+const{
+    getReservaHab,
+    createReservaHab,
+    getReservaHabByID
+} = require('../controllers/reservarHab.controller')
+
+const{
+    getReserva,
+    createReserva,
+    getLastReserva
+} = require('../controllers/serserva.controller')
+
 
 //Metods HTTP
 
@@ -86,11 +100,13 @@ router.delete('/users/:id', deleteUsers);
 
 // Rutas para los controladores de habitaciones
 router.get('/rooms', getRooms);
+router.get('/BestRoom', getBestRoom);
 router.post('/rooms', createRoom);
 router.get('/rooms/:habitacionId', getRoomByID);
 router.put('/rooms/:habitacionId', updateRoom);
 router.delete('/rooms/:habitacionId', deleteRoom);
 router.get('/rooms/type/:tipo', getRoomByType);
+
 
 
 // Rutas para los controladores de gerentes
@@ -129,7 +145,14 @@ router.post('/contacto', contactoUser);
 router.get('/mensajes/:tipo', getMensajesPorTipo);
 router.get('/mensajes', getMensajes);
 
+//Rutas para controladores de reserva habitacion
+router.get('/reservaHab', getReservaHab);
+router.get('/ReservaHabByID', getReservaHabByID);
+router.post('/reservaHab', createReservaHab);
 
-
+//Rutas para controladores de reserva
+router.get('/reserva', getReserva);
+router.post('/reserva', createReserva);
+router.get('/lastReserva', getLastReserva);
 
 module.exports = router;
