@@ -16,6 +16,15 @@ const getReserva = async (req, res) => {
 };
 
 
+const getReservaByID = async (req, res) => {
+
+    const id = req.params.id;
+    const response = await pool.query('SELECT * FROM reserva WHERE id = $1', [1]);
+    res.json(response.rows);
+
+};
+
+
 const createReserva = async (req, res) => {
     const {id, habitacion_id, plan_id, servicio_id, fecha_inicio, fecha_fin, estado} = req.body;
 
@@ -44,5 +53,6 @@ const getLastReserva = async (req, res) => {
 module.exports = {
     getReserva,
     createReserva,
-    getLastReserva
+    getLastReserva,
+    getReservaByID
 };

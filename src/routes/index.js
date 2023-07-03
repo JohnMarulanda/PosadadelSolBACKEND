@@ -70,7 +70,8 @@ const{
 const{
     getReserva,
     createReserva,
-    getLastReserva
+    getLastReserva,
+    getReservaByID
 } = require('../controllers/serserva.controller')
 
 
@@ -161,6 +162,7 @@ router.post('/reservaHab', createReservaHab);
 
 //Rutas para controladores de reserva
 router.get('/reserva', getReserva);
+router.get('/reserva/:Reserva_id', getReservaByID);
 router.post('/reserva', createReserva);
 router.get('/lastReserva', getLastReserva);
 
